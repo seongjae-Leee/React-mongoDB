@@ -13,8 +13,8 @@ mongoose.connect(config.mongoURI, {
 }).then(() => console.log('MongoDB Connected~!!'))
   .catch(err => console.log(err));
 
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
