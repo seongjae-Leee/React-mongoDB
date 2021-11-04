@@ -35,7 +35,7 @@ app.post('/api/users/register', (req, res) => {
 });
 
 
-app.post('/api/users//login', (req, res) => {
+app.post('/api/users/login', (req, res) => {
   //요청된 이메일이 데이터베이스에 있는지 확인하고 있다면 비밀번호가 맞는 비번인지 확인하고 맞다면 토큰을 생성해주기.
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user) {
@@ -59,7 +59,7 @@ app.post('/api/users//login', (req, res) => {
   });
 });
 
-// auth 미들웨어 : 콜백함수 전에 인증을 도와줌.
+// ▼ login : auth 미들웨어로 콜백함수 전에 인증을 도와줌.
 app.get('/api/users/auth', auth, (req, res) => {
   // 여기까지 미들웨어를 통과해왔다는 얘기는 Authentication이 true라는 말.
   res.status(200).json({
@@ -74,7 +74,18 @@ app.get('/api/users/auth', auth, (req, res) => {
   });
 });
 
-
+// ▼ logout
+app.get('/api/users/logout', auth, (req, res) => {
+  User.findOneAndUpdate({ _id: req.user._id },
+    { token: "" }
+    , (err, user) => {
+      if (err) return res.json({ success: false, err });
+      return res.status(200).send({
+        success: true
+      });
+    }
+  );
+});
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}에서 만납시다.`);
